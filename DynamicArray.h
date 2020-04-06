@@ -32,6 +32,7 @@ class DynamicArray {
   void insert(T element, unsigned int index);
   // Getter
   unsigned int getSize() const;
+  void AddSize(int size);
 };
 
 template <typename T>
@@ -75,7 +76,7 @@ DynamicArray<T>::~DynamicArray() {
       std::cout << "~DynamicArray throwed an exception." << std::endl;
     }
   }
-  data=nullptr;
+  data = nullptr;
 }
 
 template <typename T>
@@ -139,6 +140,21 @@ void DynamicArray<T>::insertElem(T element, unsigned int index) {
     data[index] = element;
   }
   size++;
+}
+
+template <typename T>
+void DynamicArray<T>::AddSize(int addedSize) {
+  T* temp = new T[size + addedSize];
+  for (int i = size-1; i >= 0; i--) {
+    temp[i] = data[i];
+  }
+  for (int i = size; i < size + addedSize; i++) {
+    temp[i] = nullptr;
+  }
+  size += addedSize;
+  delete[] data;
+  data = temp;
+  allocatedMem = size + addedSize*sizeof(T);
 }
 
 template <typename T>

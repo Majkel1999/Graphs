@@ -32,8 +32,8 @@ class MatrixGraph {
     }
     file << numberOfVertices << " " << numberOfEdges << " " << startingVertex
          << std::endl;
-    for (int i = 0; i < this->numberOfVertices; i++) {
-      for (int j = 0; j < this->numberOfVertices; j++) {
+    for (int i = 0; i < adjacencyMatrix->getSize(); i++) {
+      for (int j = 0; j < adjacencyMatrix->getSize(); j++) {
         if ((*(*adjacencyMatrix)[i])[j] != nullptr) {
           file << (*(*adjacencyMatrix)[i])[j]->GetWeigth();
           file << " ";
@@ -45,6 +45,22 @@ class MatrixGraph {
       file << std::endl;
     }
     file.close();
+  }
+  void InsertVertex(Vertex<T>* vertex) {
+    numberOfVertices++;
+    vertices.pushBack(vertex);
+    for (int i = 0; i < numberOfVertices - 1; i++) {
+      (*adjacencyMatrix)[i]->pushBack(nullptr);
+    }
+    adjacencyMatrix->pushBack(new DynamicArray<Edge<T>*>(numberOfVertices));
+    for (int i = 0; i < numberOfVertices; i++) {
+      (*(*adjacencyMatrix)[numberOfVertices - 1])[i] = nullptr;
+    }
+  }
+  void InsertEdge(int start, int end, int weigth) {
+    numberOfEdges++;
+    (*(*adjacencyMatrix)[start])[end] =
+        new Edge<T>(vertices[start], vertices[end], weigth);
   }
 
  private:
