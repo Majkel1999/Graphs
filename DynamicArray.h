@@ -30,16 +30,18 @@ class DynamicArray {
   // Modifiyng Methods
   void pushBack(T element);
   void insert(T element, unsigned int index);
+  void AddSize(int addedSize);
+  void Resize(int resizeSize);
+  void ClearAndResize(int resizeSize);
   // Getter
   unsigned int getSize() const;
-  void AddSize(int size);
 };
 
 template <typename T>
 DynamicArray<T>::DynamicArray(void) {
   data = new T[defaultMem];
   allocatedMem = defaultMem;
-  size = 0;
+  size = 10;
   isEmpty = true;
 }
 
@@ -145,16 +147,42 @@ void DynamicArray<T>::insertElem(T element, unsigned int index) {
 template <typename T>
 void DynamicArray<T>::AddSize(int addedSize) {
   T* temp = new T[size + addedSize];
-  for (int i = size-1; i >= 0; i--) {
+  for (int i = size - 1; i >= 0; i--) {
     temp[i] = data[i];
-  }
-  for (int i = size; i < size + addedSize; i++) {
-    temp[i] = nullptr;
   }
   size += addedSize;
   delete[] data;
   data = temp;
-  allocatedMem = size + addedSize*sizeof(T);
+  allocatedMem = size + addedSize * sizeof(T);
+}
+template <typename T>
+void DynamicArray<T>::Resize(int resizeSize) {
+  if (resizeSize <= size) {
+    std::cerr << "Size cannot be less than actual\n";
+  } else {
+    T* temp = new T[resizeSize];
+    for (int i = 0; i < size; i++) {
+      try {
+        temp[i] = data[i];
+      } catch (...) {
+        std::cerr << "no data to copy\n";
+      }
+      size = resizeSize;
+      delete[] data;
+      data = temp;
+      allocatedMem = resizeSize * sizeof(T);
+    }
+  }
+}
+template <typename T>
+void DynamicArray<T>::ClearAndResize(int resizeSize) {
+  delete[] data;
+  data = new T[resizeSize];
+  allocatedMem = resizeSize * sizeof(T);
+  this->size = resizeSize;
+  for (int i = 0; i < size; i++) {
+    data[i] = nullptr;
+  }
 }
 
 template <typename T>
