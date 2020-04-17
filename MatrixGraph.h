@@ -2,17 +2,26 @@
 #include <fstream>
 #include <string>
 
-#include "DynamicArray.h"
 #include "Edge.h"
 #include "Graph.h"
 #include "List.h"
-#include "Vertex.h"
 
 class MatrixGraph : public Graph {
  private:
   Edge ***adjacencyMatrix;
 
  public:
+  ~MatrixGraph() {
+    for (int i = 0; i < numberOfVertices; i++) {
+      for (int j = i; j < numberOfVertices; j++) {
+        if (adjacencyMatrix[i][j] != nullptr) {
+          delete adjacencyMatrix[i][j];
+        }
+      }
+      delete[] adjacencyMatrix[i];
+    }
+    delete[] adjacencyMatrix;
+  }
   int *EndVertices(Edge *edge) {
     int *tmp = new int[2];
     tmp[0] = edge->GetStart();
@@ -36,17 +45,17 @@ class MatrixGraph : public Graph {
       return false;
     }
   }
-  List<int>* Neighbours(int vertexIndex) {
-    List<int>* tmp = new List<int>();
+  List<Edge> *Neighbours(int vertexIndex) {
+    List<Edge> *tmp = new List<Edge>();
     for (int i = 0; i < numberOfVertices; i++) {
       if (adjacencyMatrix[vertexIndex][i] != nullptr) {
-        tmp->PushBack(i);
+        tmp->PushBack(*adjacencyMatrix[vertexIndex][i]);
       }
     }
     return tmp;
   }
   int GetEdgeWeigth(int vertex1, int vertex2) {
-    return adjacencyMatrix[vertex1][vertex2]->GetWeigth();  
+    return adjacencyMatrix[vertex1][vertex2]->GetWeigth();
   }
 
   void InsertEdge(int vertex1, int vertex2, int weigth) {

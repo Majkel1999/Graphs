@@ -28,6 +28,7 @@ class List {
  private:
   Node<T>* head;
   Node<T>* tail;
+  unsigned int size = 0;
 
  public:
   List() {
@@ -38,8 +39,19 @@ class List {
     Node<T>* tmp = new Node<T>(elem);
     this->head = tmp;
     this->tail = this->head;
+    size = 1;
   }
   ~List() {
+    if (!this->IsEmpty()) {
+      while (this->head!=this->tail) {
+        Node<T>* tmp = this->head->GetNext();
+        delete this->head;
+        this->head = tmp;
+      }
+      delete this->head;
+    }
+  }
+  void Clear() {
     if (!this->IsEmpty()) {
       while (this->head->GetNext() != nullptr) {
         Node<T>* tmp = this->head->GetNext();
@@ -48,6 +60,7 @@ class List {
       }
       delete this->head;
     }
+    size = 0;
   }
   T operator[](unsigned int index) {
     if (!this->IsEmpty()) {
@@ -59,12 +72,10 @@ class List {
         }
         return tmp->GetData();
       } else {
-        std::cerr << "Index out of range\n";
-        return 0;
+        throw "Index out of range";
       }
     } else {
-      std::cerr << "List is empty\n";
-      return 0;
+      throw "List is empty";
     }
   }
   Node<T>* GetNode(unsigned int index) {
@@ -77,11 +88,11 @@ class List {
         }
         return tmp;
       } else {
-        std::cerr << "Index out of range\n";
+        throw "Index out of range\n";
         return nullptr;
       }
     } else {
-      std::cerr << "List is empty\n";
+      throw "List is empty\n";
       return nullptr;
     }
   }
@@ -92,18 +103,7 @@ class List {
       return false;
     }
   }
-  unsigned int Size() {
-    if (!this->IsEmpty()) {
-      int size = 1;
-      Node<T>* iter = this->head;
-      while (iter->GetNext() != nullptr) {
-        size++;
-        iter = iter->GetNext();
-      }
-      return size;
-    } else {
-      return 0;
-    }
+  unsigned int Size() { return size;
   }
   void PushFront(T elem) {
     if (!this->IsEmpty()) {
@@ -115,6 +115,7 @@ class List {
       this->head = new Node<T>(elem);
       this->tail = this->head;
     }
+    size++;
   }
   T PopFront() {
     if (!this->IsEmpty()) {
@@ -128,10 +129,10 @@ class List {
         this->head = nullptr;
         this->tail = nullptr;
       }
+      size--;
       return tmp.GetData();
     } else {
-      std::cerr << "List is empty\n";
-      return 0;
+      throw "List is empty\n";
     }
   }
   void Insert(T elem, unsigned int index) {
@@ -153,10 +154,12 @@ class List {
         tmp->SetNext(next);
         next->SetPrevious(tmp);
       }
+      size++;
     } else if (index == 0) {
       this->PushFront(elem);
+      size++;
     } else {
-      std::cerr << "List is empty and index > 0\n";
+      throw "List is empty and index > 0\n";
     }
   }
   void Remove(int index) {
@@ -177,8 +180,9 @@ class List {
         next->SetPrevious(prev);
         delete tmp;
       }
+      size--;
     } else {
-      std::cerr << "List is empty and index > 0\n";
+      throw "List is empty and index > 0\n";
     }
   }
   T PullOut(unsigned int index) {
@@ -199,11 +203,11 @@ class List {
         next->SetPrevious(prev);
         T holder = tmp->GetData();
         delete tmp;
+        size--;
         return holder;
       }
     } else {
-      std::cerr << "List is empty and index > 0\n";
-      return NULL;
+      throw "List is empty and index > 0\n";
     }
   }
   void PushBack(T elem) {
@@ -216,6 +220,7 @@ class List {
       this->head = new Node<T>(elem);
       this->tail = this->head;
     }
+    size++;
   }
   T PopBack() {
     if (!this->IsEmpty()) {
@@ -229,10 +234,10 @@ class List {
         this->tail = nullptr;
         this->head = nullptr;
       }
+      size--;
       return tmp.GetData();
     } else {
-      std::cerr << "List is empty\n";
-      return 0;
+      throw "List is empty\n";
     }
   }
   void Modify(int index, T elem) {
@@ -245,10 +250,10 @@ class List {
         }
         tmp->SetData(elem);
       } else {
-        std::cerr << "Index out of range\n";
+        throw "Index out of range\n";
       }
     } else {
-      std::cerr << "List is empty\n";
+      throw "List is empty\n";
     }
   }
   T* Find(T elem) {

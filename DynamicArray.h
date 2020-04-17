@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#include "Util.h"
+#include "Utility.h"
 
 template <typename T>
 class DynamicArray {

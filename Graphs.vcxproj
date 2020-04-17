@@ -145,11 +145,10 @@
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="ListGraph.h" />
-    <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="MatrixGraph.h" />
     <ClInclude Include="List.h" />
-    <ClInclude Include="Util.h" />
+    <ClInclude Include="Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
